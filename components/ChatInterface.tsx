@@ -2,7 +2,7 @@
  * Chat interface component for the conversational intake flow.
  * Shows messages in chat bubbles (user on right, assistant on left),
  * with a text input and send button at the bottom.
- * Handles sending messages to the intake API and displaying responses.
+ * Supports quick-select choice buttons parsed from assistant messages.
  */
 "use client";
 
@@ -17,6 +17,18 @@ interface Message {
 interface ChatInterfaceProps {
   // Called when Claude outputs valid JSON — the parent component handles saving
   onProjectComplete: (jsonData: string) => void;
+}
+
+// Parse <<choices>>A||B||C<</choices>> from message text
+function parseChoices(content: string): { text: string; choices: string[] } {
+  const match = content.match(/<<choices>>([\s\S]*?)<\/choices>>/);
+  if (!match) return { text: content, choices: [] };
+  const text = content.replace(/<<choices>>[\s\S]*?<\/choices>>/, "").trim();
+  const choices = match[1]
+    .split("||")
+    .map((c) => c.trim())
+    .filter(Boolean);
+  return { text, choices };
 }
 
 export function ChatInterface({ onProjectComplete }: ChatInterfaceProps) {
@@ -40,9 +52,9 @@ export function ChatInterface({ onProjectComplete }: ChatInterfaceProps) {
     }
   }, [input]);
 
-  // Send the user's message to the intake API
-  async function handleSend() {
-    const trimmed = input.trim();
+  // Send a message (from typing or clicking a choice)
+  async function sendMessage(text: string) {
+    const trimmed = text.trim();
     if (!trimmed || isLoading) return;
 
     setError(null);
@@ -84,6 +96,10 @@ export function ChatInterface({ onProjectComplete }: ChatInterfaceProps) {
     }
   }
 
+  function handleSend() {
+    sendMessage(input);
+  }
+
   // Handle Enter key — send on Enter, new line on Shift+Enter
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -91,6 +107,13 @@ export function ChatInterface({ onProjectComplete }: ChatInterfaceProps) {
       handleSend();
     }
   }
+
+  // Check if the last message has choices to show
+  const lastMessage = messages[messages.length - 1];
+  const lastChoices =
+    lastMessage?.role === "assistant" && !isLoading
+      ? parseChoices(lastMessage.content).choices
+      : [];
 
   return (
     <div className="flex flex-col h-full">
@@ -103,28 +126,51 @@ export function ChatInterface({ onProjectComplete }: ChatInterfaceProps) {
               Set up a new project
             </h2>
             <p className="text-sm max-w-md mx-auto">
-              Describe your project or program in your own words. I&apos;ll ask a few
-              follow-up questions, then generate a full project plan for you.
+              Describe your project or program in a few sentences.
+              I&apos;ll guide you through a few quick questions.
             </p>
           </div>
         )}
 
-        {messages.map((msg, i) => (
-          <div
-            key={i}
-            className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-          >
-            <div
-              className={`max-w-[80%] rounded-lg px-4 py-3 text-sm whitespace-pre-wrap ${
-                msg.role === "user"
-                  ? "bg-[#1F3864] text-white"
-                  : "bg-gray-100 text-gray-800"
-              }`}
-            >
-              {msg.content}
+        {messages.map((msg, i) => {
+          const { text, choices } = msg.role === "assistant"
+            ? parseChoices(msg.content)
+            : { text: msg.content, choices: [] };
+          const isLast = i === messages.length - 1;
+
+          return (
+            <div key={i}>
+              <div
+                className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+              >
+                <div
+                  className={`max-w-[80%] rounded-lg px-4 py-3 text-sm whitespace-pre-wrap ${
+                    msg.role === "user"
+                      ? "bg-[#1F3864] text-white"
+                      : "bg-gray-100 text-gray-800"
+                  }`}
+                >
+                  {text}
+                </div>
+              </div>
+
+              {/* Render choice buttons for the last assistant message only */}
+              {isLast && choices.length > 0 && !isLoading && (
+                <div className="flex flex-wrap gap-2 mt-2 ml-1">
+                  {choices.map((choice, ci) => (
+                    <button
+                      key={ci}
+                      onClick={() => sendMessage(choice)}
+                      className="px-3 py-1.5 text-sm border border-[#1F3864] text-[#1F3864] rounded-full hover:bg-[#1F3864] hover:text-white transition-colors"
+                    >
+                      {choice}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
-          </div>
-        ))}
+          );
+        })}
 
         {/* Loading indicator */}
         {isLoading && (
@@ -158,13 +204,19 @@ export function ChatInterface({ onProjectComplete }: ChatInterfaceProps) {
 
       {/* Input area */}
       <div className="border-t bg-white p-4">
+        {/* Show choice hint when choices are available */}
+        {lastChoices.length > 0 && (
+          <p className="text-xs text-gray-400 text-center mb-2">
+            Tap a choice above or type your own answer
+          </p>
+        )}
         <div className="flex items-end gap-2 max-w-3xl mx-auto">
           <textarea
             ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Describe your project..."
+            placeholder={messages.length === 0 ? "Describe your project..." : "Type your answer..."}
             rows={1}
             className="flex-1 resize-none border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#1F3864] focus:border-transparent max-h-32"
             disabled={isLoading}
