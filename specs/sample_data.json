@@ -1,0 +1,845 @@
+{
+  "program": {
+    "id": "prog-001",
+    "name": "AI Team Operational Management",
+    "description": "Managing AI strategy execution across education, metrics, product rollouts, and leadership communications for the firm",
+    "status": "on_track",
+    "created_date": "2025-01-06",
+    "target_end_date": null,
+    "is_ongoing": true,
+    "owner": {
+      "name": "Matt",
+      "role": "AI Team Lead",
+      "email": "matt@firm.com"
+    }
+  },
+  "workstreams": [
+    {
+      "id": "ws-1",
+      "name": "Education & Training",
+      "lead": {
+        "name": "Rachel Simmons",
+        "role": "VP, Education & Training Lead",
+        "email": "rachel.simmons@firm.com"
+      },
+      "status": "on_track",
+      "description": "Employee AI training, learning paths, completion tracking, champion network",
+      "tasks": [
+        {
+          "id": "T-101",
+          "workstream_id": "ws-1",
+          "name": "Finalize Q1 training calendar",
+          "owner": "Rachel Simmons",
+          "start_date": "2025-01-13",
+          "end_date": "2025-01-24",
+          "duration_days": 10,
+          "predecessor": null,
+          "status": "complete",
+          "percent_complete": 100,
+          "priority": "high",
+          "notes": ""
+        },
+        {
+          "id": "T-102",
+          "workstream_id": "ws-1",
+          "name": "Develop Intro to AI Assistants training module",
+          "owner": "Rachel Simmons",
+          "start_date": "2025-01-20",
+          "end_date": "2025-02-07",
+          "duration_days": 15,
+          "predecessor": null,
+          "status": "complete",
+          "percent_complete": 100,
+          "priority": "high",
+          "notes": "Covers Claude, Copilot basics for non-technical staff"
+        },
+        {
+          "id": "T-103",
+          "workstream_id": "ws-1",
+          "name": "Run Wealth Management training sessions (Cohort 1)",
+          "owner": "Rachel Simmons",
+          "start_date": "2025-02-10",
+          "end_date": "2025-02-21",
+          "duration_days": 10,
+          "predecessor": "T-102",
+          "status": "in_progress",
+          "percent_complete": 40,
+          "priority": "high",
+          "notes": "3 sessions scheduled, first one complete, 45 attendees so far"
+        },
+        {
+          "id": "T-104",
+          "workstream_id": "ws-1",
+          "name": "Run Banking training sessions (Cohort 1)",
+          "owner": "Rachel Simmons",
+          "start_date": "2025-02-24",
+          "end_date": "2025-03-07",
+          "duration_days": 10,
+          "predecessor": "T-103",
+          "status": "not_started",
+          "percent_complete": 0,
+          "priority": "medium",
+          "notes": "Dates confirmed with Banking leadership"
+        },
+        {
+          "id": "T-105",
+          "workstream_id": "ws-1",
+          "name": "Build advanced prompt engineering workshop",
+          "owner": "Rachel Simmons",
+          "start_date": "2025-02-17",
+          "end_date": "2025-03-14",
+          "duration_days": 20,
+          "predecessor": null,
+          "status": "in_progress",
+          "percent_complete": 20,
+          "priority": "medium",
+          "notes": "For power users and AI champions. Hands-on format."
+        },
+        {
+          "id": "T-106",
+          "workstream_id": "ws-1",
+          "name": "Recruit AI Champions for S&T and Investment Management",
+          "owner": "Rachel Simmons",
+          "start_date": "2025-02-03",
+          "end_date": "2025-02-28",
+          "duration_days": 20,
+          "predecessor": null,
+          "status": "in_progress",
+          "percent_complete": 50,
+          "priority": "medium",
+          "notes": "Have 4 confirmed for S&T, need 2-3 more for IM. Working with business line heads."
+        },
+        {
+          "id": "T-107",
+          "workstream_id": "ws-1",
+          "name": "Build training completion tracking dashboard",
+          "owner": "Rachel Simmons",
+          "start_date": "2025-02-10",
+          "end_date": "2025-02-21",
+          "duration_days": 10,
+          "predecessor": null,
+          "status": "in_progress",
+          "percent_complete": 30,
+          "priority": "low",
+          "notes": "Excel-based for now. Tracks by business line and seniority."
+        }
+      ],
+      "milestones": [
+        {
+          "id": "MS-101",
+          "workstream_id": "ws-1",
+          "name": "Q1 Training Sessions Complete (WM + Banking)",
+          "date": "2025-03-14",
+          "status": "upcoming",
+          "dependencies": ["T-103", "T-104"],
+          "owner": "Rachel Simmons"
+        },
+        {
+          "id": "MS-102",
+          "workstream_id": "ws-1",
+          "name": "AI Champion Network Established (all 4 business lines)",
+          "date": "2025-03-31",
+          "status": "upcoming",
+          "dependencies": ["T-106"],
+          "owner": "Rachel Simmons"
+        },
+        {
+          "id": "MS-103",
+          "workstream_id": "ws-1",
+          "name": "500 Employees Trained",
+          "date": "2025-06-30",
+          "status": "upcoming",
+          "dependencies": [],
+          "owner": "Rachel Simmons"
+        }
+      ]
+    },
+    {
+      "id": "ws-2",
+      "name": "Metrics & Reporting",
+      "lead": {
+        "name": "Kevin Park",
+        "role": "AVP, Metrics & Reporting Lead",
+        "email": "kevin.park@firm.com"
+      },
+      "status": "on_track",
+      "description": "Adoption tracking, ROI calculations, dashboards, reporting cadence",
+      "tasks": [
+        {
+          "id": "T-201",
+          "workstream_id": "ws-2",
+          "name": "Define firm-wide AI adoption metrics framework",
+          "owner": "Kevin Park",
+          "start_date": "2025-01-13",
+          "end_date": "2025-01-31",
+          "duration_days": 15,
+          "predecessor": null,
+          "status": "complete",
+          "percent_complete": 100,
+          "priority": "high",
+          "notes": "Approved by Matt. Covers MAU, tasks completed, time saved, NPS."
+        },
+        {
+          "id": "T-202",
+          "workstream_id": "ws-2",
+          "name": "Build monthly adoption dashboard (v1)",
+          "owner": "Kevin Park",
+          "start_date": "2025-02-03",
+          "end_date": "2025-02-14",
+          "duration_days": 10,
+          "predecessor": "T-201",
+          "status": "complete",
+          "percent_complete": 100,
+          "priority": "high",
+          "notes": "Excel-based. Pulls from vendor usage reports manually."
+        },
+        {
+          "id": "T-203",
+          "workstream_id": "ws-2",
+          "name": "Collect January usage data from all AI vendors",
+          "owner": "Kevin Park",
+          "start_date": "2025-02-03",
+          "end_date": "2025-02-07",
+          "duration_days": 5,
+          "predecessor": null,
+          "status": "complete",
+          "percent_complete": 100,
+          "priority": "high",
+          "notes": "Anthropic, Microsoft, internal tools all reported"
+        },
+        {
+          "id": "T-204",
+          "workstream_id": "ws-2",
+          "name": "Produce February adoption report",
+          "owner": "Kevin Park",
+          "start_date": "2025-02-17",
+          "end_date": "2025-02-28",
+          "duration_days": 10,
+          "predecessor": "T-202",
+          "status": "not_started",
+          "percent_complete": 0,
+          "priority": "high",
+          "notes": "First report using the new framework and dashboard"
+        },
+        {
+          "id": "T-205",
+          "workstream_id": "ws-2",
+          "name": "Design ROI calculation methodology",
+          "owner": "Kevin Park",
+          "start_date": "2025-02-10",
+          "end_date": "2025-03-07",
+          "duration_days": 20,
+          "predecessor": "T-201",
+          "status": "in_progress",
+          "percent_complete": 25,
+          "priority": "high",
+          "notes": "Working with Finance to agree on cost-of-time assumptions and productivity multipliers"
+        },
+        {
+          "id": "T-206",
+          "workstream_id": "ws-2",
+          "name": "Build quarterly executive metrics package template",
+          "owner": "Kevin Park",
+          "start_date": "2025-02-24",
+          "end_date": "2025-03-14",
+          "duration_days": 15,
+          "predecessor": "T-205",
+          "status": "not_started",
+          "percent_complete": 0,
+          "priority": "medium",
+          "notes": "Template for the quarterly board-level summary. Needs ROI methodology finalized first."
+        }
+      ],
+      "milestones": [
+        {
+          "id": "MS-201",
+          "workstream_id": "ws-2",
+          "name": "First Monthly Adoption Report Published",
+          "date": "2025-02-28",
+          "status": "upcoming",
+          "dependencies": ["T-204"],
+          "owner": "Kevin Park"
+        },
+        {
+          "id": "MS-202",
+          "workstream_id": "ws-2",
+          "name": "ROI Methodology Approved by Finance",
+          "date": "2025-03-07",
+          "status": "upcoming",
+          "dependencies": ["T-205"],
+          "owner": "Kevin Park"
+        },
+        {
+          "id": "MS-203",
+          "workstream_id": "ws-2",
+          "name": "First Quarterly Executive Metrics Package",
+          "date": "2025-03-31",
+          "status": "upcoming",
+          "dependencies": ["T-206"],
+          "owner": "Kevin Park"
+        }
+      ]
+    },
+    {
+      "id": "ws-3",
+      "name": "Product Rollouts",
+      "lead": {
+        "name": "Priya Chandrasekaran",
+        "role": "Director, Product Rollouts Lead",
+        "email": "priya.chandrasekaran@firm.com"
+      },
+      "status": "at_risk",
+      "description": "Tool evaluation, pilots, approvals, phased deployments",
+      "tasks": [
+        {
+          "id": "T-301",
+          "workstream_id": "ws-3",
+          "name": "Complete Claude for Research Analysts pilot monitoring",
+          "owner": "Priya Chandrasekaran",
+          "start_date": "2025-01-15",
+          "end_date": "2025-03-15",
+          "duration_days": 45,
+          "predecessor": null,
+          "status": "in_progress",
+          "percent_complete": 65,
+          "priority": "high",
+          "notes": "Pilot running with 25 analysts in IM. Usage tracking active. Mid-pilot survey sent."
+        },
+        {
+          "id": "T-302",
+          "workstream_id": "ws-3",
+          "name": "Submit compliance review package for Claude firm-wide rollout",
+          "owner": "Priya Chandrasekaran",
+          "start_date": "2025-02-03",
+          "end_date": "2025-02-14",
+          "duration_days": 10,
+          "predecessor": null,
+          "status": "in_progress",
+          "percent_complete": 70,
+          "priority": "high",
+          "notes": "Package drafted. Waiting on data handling addendum from Anthropic."
+        },
+        {
+          "id": "T-303",
+          "workstream_id": "ws-3",
+          "name": "Evaluate Copilot for developer productivity",
+          "owner": "Priya Chandrasekaran",
+          "start_date": "2025-02-10",
+          "end_date": "2025-03-07",
+          "duration_days": 20,
+          "predecessor": null,
+          "status": "in_progress",
+          "percent_complete": 15,
+          "priority": "medium",
+          "notes": "Initial vendor call done. Reviewing security architecture docs. Need CISO input."
+        },
+        {
+          "id": "T-304",
+          "workstream_id": "ws-3",
+          "name": "Obtain legal sign-off on Claude enterprise agreement",
+          "owner": "Priya Chandrasekaran",
+          "start_date": "2025-01-27",
+          "end_date": "2025-02-14",
+          "duration_days": 15,
+          "predecessor": null,
+          "status": "at_risk",
+          "percent_complete": 50,
+          "priority": "high",
+          "notes": "Legal has redlines on data retention clause. Back and forth with Anthropic legal. Was due Feb 14 — likely to slip 1-2 weeks."
+        },
+        {
+          "id": "T-305",
+          "workstream_id": "ws-3",
+          "name": "Define Phase 2 rollout plan for Claude (post-pilot)",
+          "owner": "Priya Chandrasekaran",
+          "start_date": "2025-03-01",
+          "end_date": "2025-03-21",
+          "duration_days": 15,
+          "predecessor": "T-301",
+          "status": "not_started",
+          "percent_complete": 0,
+          "priority": "medium",
+          "notes": "Depends on pilot results and legal/compliance approvals"
+        },
+        {
+          "id": "T-306",
+          "workstream_id": "ws-3",
+          "name": "Build AI tool evaluation scoring rubric",
+          "owner": "Priya Chandrasekaran",
+          "start_date": "2025-02-17",
+          "end_date": "2025-02-28",
+          "duration_days": 10,
+          "predecessor": null,
+          "status": "not_started",
+          "percent_complete": 0,
+          "priority": "medium",
+          "notes": "Standardized framework for evaluating any new AI tool."
+        }
+      ],
+      "milestones": [
+        {
+          "id": "MS-301",
+          "workstream_id": "ws-3",
+          "name": "Claude Research Analyst Pilot Complete",
+          "date": "2025-03-15",
+          "status": "upcoming",
+          "dependencies": ["T-301"],
+          "owner": "Priya Chandrasekaran"
+        },
+        {
+          "id": "MS-302",
+          "workstream_id": "ws-3",
+          "name": "Claude Enterprise Agreement Signed",
+          "date": "2025-02-28",
+          "status": "at_risk",
+          "dependencies": ["T-304"],
+          "owner": "Priya Chandrasekaran"
+        },
+        {
+          "id": "MS-303",
+          "workstream_id": "ws-3",
+          "name": "Go/No-Go Decision on Claude Firm-Wide Rollout",
+          "date": "2025-03-31",
+          "status": "upcoming",
+          "dependencies": ["MS-301", "MS-302"],
+          "owner": "Matt"
+        }
+      ]
+    },
+    {
+      "id": "ws-4",
+      "name": "Leadership Presentations & Communications",
+      "lead": {
+        "name": "Jordan Ellis",
+        "role": "Associate, Presentations Lead",
+        "email": "jordan.ellis@firm.com"
+      },
+      "status": "on_track",
+      "description": "Executive decks, town halls, demo days, talking points",
+      "tasks": [
+        {
+          "id": "T-401",
+          "workstream_id": "ws-4",
+          "name": "Build February monthly leadership update deck",
+          "owner": "Jordan Ellis",
+          "start_date": "2025-02-17",
+          "end_date": "2025-02-25",
+          "duration_days": 7,
+          "predecessor": null,
+          "status": "not_started",
+          "percent_complete": 0,
+          "priority": "high",
+          "notes": "Needs Kevin's adoption numbers and Priya's pilot update"
+        },
+        {
+          "id": "T-402",
+          "workstream_id": "ws-4",
+          "name": "Prepare AI Demo Day materials for business line heads",
+          "owner": "Jordan Ellis",
+          "start_date": "2025-02-10",
+          "end_date": "2025-02-28",
+          "duration_days": 15,
+          "predecessor": null,
+          "status": "in_progress",
+          "percent_complete": 30,
+          "priority": "high",
+          "notes": "3 demos planned: document summarization, research assistant, email drafting. Need to finalize which tools to showcase."
+        },
+        {
+          "id": "T-403",
+          "workstream_id": "ws-4",
+          "name": "Draft Q1 board summary talking points",
+          "owner": "Jordan Ellis",
+          "start_date": "2025-03-10",
+          "end_date": "2025-03-21",
+          "duration_days": 10,
+          "predecessor": "T-401",
+          "status": "not_started",
+          "percent_complete": 0,
+          "priority": "medium",
+          "notes": "Board meeting is late March. Needs full Q1 metrics and rollout status."
+        },
+        {
+          "id": "T-404",
+          "workstream_id": "ws-4",
+          "name": "Update AI strategy one-pager for external meetings",
+          "owner": "Jordan Ellis",
+          "start_date": "2025-02-03",
+          "end_date": "2025-02-14",
+          "duration_days": 10,
+          "predecessor": null,
+          "status": "complete",
+          "percent_complete": 100,
+          "priority": "medium",
+          "notes": "Refreshed with 2025 priorities and Q4 results"
+        },
+        {
+          "id": "T-405",
+          "workstream_id": "ws-4",
+          "name": "Plan and schedule AI Town Hall for all employees",
+          "owner": "Jordan Ellis",
+          "start_date": "2025-02-17",
+          "end_date": "2025-03-14",
+          "duration_days": 20,
+          "predecessor": null,
+          "status": "not_started",
+          "percent_complete": 0,
+          "priority": "medium",
+          "notes": "Targeting late March. Need to book venue, confirm speakers, build agenda."
+        }
+      ],
+      "milestones": [
+        {
+          "id": "MS-401",
+          "workstream_id": "ws-4",
+          "name": "AI Demo Day for Business Line Heads",
+          "date": "2025-03-05",
+          "status": "upcoming",
+          "dependencies": ["T-402"],
+          "owner": "Jordan Ellis"
+        },
+        {
+          "id": "MS-402",
+          "workstream_id": "ws-4",
+          "name": "Q1 Board Summary Delivered",
+          "date": "2025-03-28",
+          "status": "upcoming",
+          "dependencies": ["T-403"],
+          "owner": "Matt"
+        },
+        {
+          "id": "MS-403",
+          "workstream_id": "ws-4",
+          "name": "AI Town Hall",
+          "date": "2025-03-28",
+          "status": "upcoming",
+          "dependencies": ["T-405"],
+          "owner": "Matt"
+        }
+      ]
+    }
+  ],
+  "stakeholders": [
+    {
+      "id": "sh-1",
+      "name": "Sarah Chen",
+      "role": "Chief Technology Officer",
+      "organization": "Executive Leadership",
+      "email": "sarah.chen@firm.com",
+      "interest_level": "high",
+      "influence_level": "high",
+      "communications": [
+        {
+          "type": "leadership_update",
+          "frequency": "monthly",
+          "format": "email",
+          "detail_level": "summary"
+        },
+        {
+          "type": "quarterly_review",
+          "frequency": "quarterly",
+          "format": "presentation",
+          "detail_level": "strategic"
+        }
+      ],
+      "notes": "Matt's direct report-to. Wants adoption numbers and ROI proof points for the board."
+    },
+    {
+      "id": "sh-2",
+      "name": "David Liu",
+      "role": "Head of Wealth Management",
+      "organization": "Wealth Management",
+      "email": "david.liu@firm.com",
+      "interest_level": "high",
+      "influence_level": "high",
+      "communications": [
+        {
+          "type": "business_line_update",
+          "frequency": "monthly",
+          "format": "email",
+          "detail_level": "tailored"
+        }
+      ],
+      "notes": "Most engaged business line. Wants to know when his advisors get the next tool. Early adopter."
+    },
+    {
+      "id": "sh-3",
+      "name": "Maria Santos",
+      "role": "Head of Banking",
+      "organization": "Banking",
+      "email": "maria.santos@firm.com",
+      "interest_level": "medium",
+      "influence_level": "high",
+      "communications": [
+        {
+          "type": "business_line_update",
+          "frequency": "monthly",
+          "format": "email",
+          "detail_level": "tailored"
+        }
+      ],
+      "notes": "Interested but cautious. Wants to see proof from WM pilot before committing resources."
+    },
+    {
+      "id": "sh-4",
+      "name": "Tom Nakamura",
+      "role": "Head of Sales & Trading",
+      "organization": "Sales & Trading",
+      "email": "tom.nakamura@firm.com",
+      "interest_level": "low",
+      "influence_level": "high",
+      "communications": [
+        {
+          "type": "business_line_update",
+          "frequency": "quarterly",
+          "format": "email",
+          "detail_level": "summary"
+        }
+      ],
+      "notes": "Skeptical of AI hype. Needs to see hard productivity numbers. Don't oversell."
+    },
+    {
+      "id": "sh-5",
+      "name": "James Hartley",
+      "role": "Chief Compliance Officer",
+      "organization": "Compliance",
+      "email": "james.hartley@firm.com",
+      "interest_level": "medium",
+      "influence_level": "high",
+      "communications": [
+        {
+          "type": "approval_request",
+          "frequency": "as_needed",
+          "format": "email",
+          "detail_level": "detailed"
+        }
+      ],
+      "notes": "Gatekeeper. Every tool needs his sign-off. Prefers early engagement over surprises."
+    },
+    {
+      "id": "sh-6",
+      "name": "Nina Vasquez",
+      "role": "CISO",
+      "organization": "Information Security",
+      "email": "nina.vasquez@firm.com",
+      "interest_level": "medium",
+      "influence_level": "high",
+      "communications": [
+        {
+          "type": "security_review",
+          "frequency": "as_needed",
+          "format": "email",
+          "detail_level": "detailed"
+        }
+      ],
+      "notes": "Must approve security architecture for every AI tool. Concerned about data leakage. Loop in early."
+    }
+  ],
+  "meetings": [
+    {
+      "id": "mtg-1",
+      "name": "AI Team Weekly Sync",
+      "frequency": "weekly",
+      "day": "Tuesday",
+      "time": "10:00 AM",
+      "attendees": ["Matt", "Rachel Simmons", "Kevin Park", "Priya Chandrasekaran", "Jordan Ellis"],
+      "purpose": "Workstream updates, blockers, cross-workstream coordination",
+      "generates": ["agenda", "action_items"]
+    },
+    {
+      "id": "mtg-2",
+      "name": "CTO Monthly Update",
+      "frequency": "monthly",
+      "day": "Last Thursday",
+      "time": "2:00 PM",
+      "attendees": ["Matt", "Sarah Chen"],
+      "purpose": "Program status, adoption metrics, strategic decisions, budget",
+      "generates": ["leadership_update_email", "presentation"]
+    },
+    {
+      "id": "mtg-3",
+      "name": "Business Line Quarterly Review",
+      "frequency": "quarterly",
+      "day": "Second week of quarter",
+      "time": "TBD",
+      "attendees": ["Matt", "David Liu", "Maria Santos", "Tom Nakamura", "Kevin Park"],
+      "purpose": "ROI review, upcoming rollouts, business line feedback and requests",
+      "generates": ["quarterly_summary", "presentation"]
+    },
+    {
+      "id": "mtg-4",
+      "name": "AI Champions Monthly Huddle",
+      "frequency": "monthly",
+      "day": "Third Wednesday",
+      "time": "12:00 PM",
+      "attendees": ["Rachel Simmons", "AI Champions (rotating)"],
+      "purpose": "Share best practices, gather feedback, surface use cases from the field",
+      "generates": ["agenda"]
+    }
+  ],
+  "raid_log": [
+    {
+      "id": "R-001",
+      "type": "risk",
+      "description": "Legal redlines on Claude enterprise agreement data retention clause may delay firm-wide rollout",
+      "workstream_id": "ws-3",
+      "impact": "high",
+      "probability": "high",
+      "owner": "Priya Chandrasekaran",
+      "mitigation": "Escalate to CTO for executive-level conversation with Anthropic. Identify fallback contract language.",
+      "status": "open",
+      "date_raised": "2025-02-05",
+      "target_resolution_date": "2025-02-21"
+    },
+    {
+      "id": "R-002",
+      "type": "risk",
+      "description": "Training adoption may drop off after initial sessions if managers don't reinforce usage",
+      "workstream_id": "ws-1",
+      "impact": "medium",
+      "probability": "medium",
+      "owner": "Rachel Simmons",
+      "mitigation": "AI Champion network provides peer support. Post-training follow-up surveys at 30/60/90 days. Manager talking points.",
+      "status": "open",
+      "date_raised": "2025-01-20",
+      "target_resolution_date": "2025-04-30"
+    },
+    {
+      "id": "R-003",
+      "type": "risk",
+      "description": "ROI methodology may not satisfy board-level scrutiny if productivity assumptions are challenged",
+      "workstream_id": "ws-2",
+      "impact": "high",
+      "probability": "medium",
+      "owner": "Kevin Park",
+      "mitigation": "Co-developing methodology with Finance to ensure buy-in. Using conservative assumptions. Benchmarking against industry peers.",
+      "status": "open",
+      "date_raised": "2025-02-10",
+      "target_resolution_date": "2025-03-07"
+    },
+    {
+      "id": "A-001",
+      "type": "assumption",
+      "description": "Anthropic and Microsoft will continue to provide monthly usage data exports in current format",
+      "workstream_id": "ws-2",
+      "impact": "medium",
+      "probability": null,
+      "owner": "Kevin Park",
+      "mitigation": "Confirm with vendor account managers quarterly. Build data ingestion to handle format changes.",
+      "status": "open",
+      "date_raised": "2025-01-15",
+      "target_resolution_date": null
+    },
+    {
+      "id": "I-001",
+      "type": "issue",
+      "description": "CISO team has 3-week backlog on security reviews — Copilot evaluation may be delayed",
+      "workstream_id": "ws-3",
+      "impact": "medium",
+      "probability": null,
+      "owner": "Priya Chandrasekaran",
+      "mitigation": "Submitted early. Escalate to Nina Vasquez if not picked up by Feb 24.",
+      "status": "open",
+      "date_raised": "2025-02-10",
+      "target_resolution_date": "2025-03-07"
+    },
+    {
+      "id": "D-001",
+      "type": "dependency",
+      "description": "February leadership deck depends on Kevin's adoption dashboard being complete",
+      "workstream_id": "ws-4",
+      "impact": "medium",
+      "probability": null,
+      "owner": "Jordan Ellis",
+      "mitigation": "Kevin's dashboard is on track for Feb 14 completion. Jordan to use preliminary numbers if dashboard slips.",
+      "status": "open",
+      "date_raised": "2025-02-03",
+      "target_resolution_date": "2025-02-25"
+    }
+  ],
+  "decisions": [
+    {
+      "id": "DEC-001",
+      "date": "2025-01-10",
+      "description": "Selected Claude as primary AI assistant for research analyst pilot",
+      "options_considered": ["Claude", "ChatGPT Enterprise", "Both in parallel"],
+      "decision": "Claude for initial pilot based on performance benchmarks and existing relationship",
+      "decided_by": "Matt",
+      "rationale": "Superior performance on long-document analysis. Anthropic willing to support pilot directly. Evaluate ChatGPT in Q2 for comparison.",
+      "workstream_id": "ws-3"
+    },
+    {
+      "id": "DEC-002",
+      "date": "2025-01-22",
+      "description": "Training approach: instructor-led vs. self-paced vs. hybrid",
+      "options_considered": ["Fully instructor-led", "Fully self-paced (video modules)", "Hybrid: instructor-led intro + self-paced advanced"],
+      "decision": "Hybrid approach",
+      "decided_by": "Matt",
+      "rationale": "Instructor-led builds engagement and allows Q&A. Self-paced scales better for advanced content.",
+      "workstream_id": "ws-1"
+    },
+    {
+      "id": "DEC-003",
+      "date": "2025-02-05",
+      "description": "Metrics reporting frequency to CTO",
+      "options_considered": ["Weekly email", "Biweekly email", "Monthly with quarterly deep dive"],
+      "decision": "Monthly email with quarterly deep dive presentation",
+      "decided_by": "Sarah Chen",
+      "rationale": "Weekly is too frequent for executive attention. Monthly cadence aligns with adoption data refresh cycle.",
+      "workstream_id": "ws-2"
+    }
+  ],
+  "rollout_pipeline": [
+    {
+      "id": "roll-1",
+      "product_name": "Claude for Research Analysts",
+      "stage": "pilot",
+      "business_line": "Investment Management",
+      "pilot_start": "2025-01-15",
+      "pilot_end": "2025-03-15",
+      "pilot_users": 25,
+      "success_criteria": "50% weekly active usage, 80% positive feedback in survey, measurable time savings on report generation",
+      "approval_status": {
+        "compliance": "approved",
+        "security": "approved",
+        "legal": "pending",
+        "procurement": "approved"
+      },
+      "workstream_id": "ws-3"
+    },
+    {
+      "id": "roll-2",
+      "product_name": "GitHub Copilot for Developers",
+      "stage": "evaluation",
+      "business_line": "Enterprise Technology",
+      "pilot_start": null,
+      "pilot_end": null,
+      "pilot_users": null,
+      "success_criteria": null,
+      "approval_status": {
+        "compliance": "not_submitted",
+        "security": "in_review",
+        "legal": "not_submitted",
+        "procurement": "not_submitted"
+      },
+      "workstream_id": "ws-3"
+    },
+    {
+      "id": "roll-3",
+      "product_name": "AI-Powered Document Summarization (Internal Build)",
+      "stage": "evaluation",
+      "business_line": "Banking",
+      "pilot_start": null,
+      "pilot_end": null,
+      "pilot_users": null,
+      "success_criteria": null,
+      "approval_status": {
+        "compliance": "not_submitted",
+        "security": "not_submitted",
+        "legal": "not_submitted",
+        "procurement": "not_applicable"
+      },
+      "workstream_id": "ws-3"
+    }
+  ]
+}
