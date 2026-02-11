@@ -23,10 +23,36 @@ export default function IntakePage() {
     setSaveError(null);
 
     try {
-      // Parse the JSON from Claude's response
-      const projectData = JSON.parse(jsonString);
+      // Parse the JSON from Claude's response and apply safe defaults
+      const raw = JSON.parse(jsonString);
 
-      // Make sure the program has an ID
+      const projectData = {
+        program: {
+          id: uuidv4(),
+          name: "Untitled Project",
+          description: "",
+          status: "on_track",
+          created_date: new Date().toISOString().slice(0, 10),
+          target_end_date: null,
+          is_ongoing: false,
+          owner: { name: "Unknown", role: "", email: "" },
+          ...raw.program,
+        },
+        workstreams: (raw.workstreams || []).map((ws: Record<string, unknown>) => ({
+          ...ws,
+          lead: ws.lead || { name: "Unassigned", role: "", email: "" },
+          tasks: ws.tasks || [],
+          milestones: ws.milestones || [],
+          status: ws.status || "on_track",
+        })),
+        stakeholders: raw.stakeholders || [],
+        meetings: raw.meetings || [],
+        raid_log: raw.raid_log || [],
+        decisions: raw.decisions || [],
+        rollout_pipeline: raw.rollout_pipeline || [],
+      };
+
+      // Ensure the program has an ID
       if (!projectData.program.id) {
         projectData.program.id = uuidv4();
       }

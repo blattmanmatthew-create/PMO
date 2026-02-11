@@ -57,7 +57,34 @@ export default function ProjectPage() {
           throw new Error("Project not found");
         }
 
-        setData(program.data as ProgramData);
+        // Apply safe defaults for any fields Claude may not have generated
+        const raw = program.data as Partial<ProgramData>;
+        const safeData: ProgramData = {
+          program: {
+            id: "",
+            name: "Untitled Project",
+            description: "",
+            status: "on_track",
+            created_date: new Date().toISOString().slice(0, 10),
+            target_end_date: null,
+            is_ongoing: false,
+            owner: { name: "Unknown", role: "", email: "" },
+            ...raw.program,
+          },
+          workstreams: (raw.workstreams || []).map((ws) => ({
+            ...ws,
+            lead: ws.lead || { name: "Unassigned", role: "", email: "" },
+            tasks: ws.tasks || [],
+            milestones: ws.milestones || [],
+            status: ws.status || "on_track",
+          })),
+          stakeholders: raw.stakeholders || [],
+          meetings: raw.meetings || [],
+          raid_log: raw.raid_log || [],
+          decisions: raw.decisions || [],
+          rollout_pipeline: raw.rollout_pipeline || [],
+        };
+        setData(safeData);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to load project");
       } finally {
