@@ -8,6 +8,32 @@ import { supabase } from "@/lib/supabase";
 import { generateExcel } from "@/lib/excel/generateExcel";
 import { ProgramData } from "@/lib/types/program";
 
+/** Ensure all top-level arrays exist so generateExcel never crashes on undefined. */
+function withDefaults(raw: Partial<ProgramData>): ProgramData {
+  return {
+    program: raw.program ?? {
+      id: "",
+      name: "Untitled",
+      description: "",
+      status: "on_track",
+      created_date: new Date().toISOString().slice(0, 10),
+      target_end_date: null,
+      is_ongoing: false,
+      owner: { name: "", role: "", email: "" },
+    },
+    workstreams: (raw.workstreams ?? []).map((ws) => ({
+      ...ws,
+      tasks: ws.tasks ?? [],
+      milestones: ws.milestones ?? [],
+    })),
+    stakeholders: raw.stakeholders ?? [],
+    meetings: raw.meetings ?? [],
+    raid_log: raw.raid_log ?? [],
+    decisions: raw.decisions ?? [],
+    rollout_pipeline: raw.rollout_pipeline ?? [],
+  } as ProgramData;
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -30,7 +56,7 @@ export async function GET(
     }
 
     // The project data is stored in the "data" column as JSONB
-    const projectData: ProgramData = program.data;
+    const projectData = withDefaults(program.data ?? {});
 
     // Generate the Excel file
     const buffer = await generateExcel(projectData);
@@ -50,8 +76,9 @@ export async function GET(
     });
   } catch (err) {
     console.error("Excel generation error:", err);
+    const message = err instanceof Error ? err.message : "Unknown error";
     return NextResponse.json(
-      { error: "Failed to generate Excel file" },
+      { error: `Failed to generate Excel file: ${message}` },
       { status: 500 }
     );
   }

@@ -201,7 +201,10 @@ export default function ProjectPage() {
     setIsDownloading(true);
     try {
       const response = await fetch(`/api/excel/${projectId}`);
-      if (!response.ok) throw new Error("Download failed");
+      if (!response.ok) {
+        const body = await response.json().catch(() => null);
+        throw new Error(body?.error || `Download failed (${response.status})`);
+      }
 
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
