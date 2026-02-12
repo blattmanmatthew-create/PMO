@@ -1,83 +1,43 @@
 /**
- * API route for the conversational intake chat.
- * Receives the conversation history, sends it to Claude with the intake
- * system prompt, and returns Claude's response.
+ * API route for the project intake form.
+ * Receives structured form data, sends it to Claude to generate
+ * a full project plan with tasks, milestones, and RAID items.
  * All Claude API calls happen server-side so the API key stays secret.
  */
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 
-// The intake system prompt — controls how Claude guides the conversation
-const INTAKE_SYSTEM_PROMPT = `You are a PMO assistant helping set up a new project. Be concise — 1-3 short sentences per response, then a question.
+// System prompt that tells Claude how to turn form data into a full project plan
+const GENERATE_PROMPT = `You are a PMO assistant. The user has filled out a project intake form. Your job is to take their structured input and generate a comprehensive project plan as JSON.
 
-## QUICK-SELECT CHOICES
+## WHAT TO GENERATE
 
-When asking a question, offer tappable choices using this exact format at the END of your message:
+Based on the form data provided, generate:
 
-<<choices>>Option A||Option B||Option C<</choices>>
-
-Always include 2-4 choices. The user can tap one or type their own answer.
-
-## CONVERSATION FLOW (aim for 4-6 total exchanges)
-
-### 1. After the user describes their project:
-Acknowledge in one sentence. Then ask about their timeline.
-
-Example:
-"Got it — a company-wide AI rollout program. What's the timeline?"
-
-<<choices>>Has a hard deadline||Ongoing / no end date||Rough target date<</choices>>
-
-### 2. Propose workstreams (don't ask the user to define them):
-Based on what they said, suggest 3-5 workstreams. Ask them to confirm.
-
-Example:
-"I'd break this into:
-1. **Training** — employee enablement
-2. **Rollouts** — tool pilots & deployment
-3. **Reporting** — metrics & dashboards
-
-Sound right?"
-
-<<choices>>Looks good||I'd adjust a few||Let me rethink this<</choices>>
-
-### 3. Ask about people:
-"Who owns each workstream? Names and titles are fine."
-
-### 4. Ask about meetings & stakeholders (combine into one question):
-"What's the meeting rhythm, and who needs status updates?"
-
-<<choices>>Weekly syncs + monthly exec updates||Biweekly standups only||We haven't set this up yet<</choices>>
-
-### 5. Ask about risks and in-flight work:
-"Anything already in motion or any big risks?"
-
-<<choices>>Yes, some things are active||Starting fresh||There are known risks<</choices>>
-
-### 6. Show a brief summary and confirm:
-Present a compact summary (use bold labels, keep it scannable). Then ask to confirm.
-
-<<choices>>Looks great, generate it||I need to change something<</choices>>
+1. **Tasks** — 3-5 realistic tasks per workstream with sensible start/end dates, owners, and dependencies.
+2. **Milestones** — 1-2 milestones per workstream at key checkpoints.
+3. **RAID items** — Pre-seed 2-4 risks/issues based on the project type and any risks the user mentioned.
+4. **Stakeholders** — Parse any stakeholder names/roles the user listed into structured records.
+5. **Meetings** — Create meeting records from the cadence the user selected.
+6. **Decisions** — Leave as empty array.
+7. **Rollout pipeline** — Leave as empty array unless the project clearly involves product rollouts.
 
 ## RULES
 
-- Max 1-3 sentences of text before your question. Never write paragraphs.
-- One question per message. Never ask two things at once.
-- Always end with <<choices>>...<</choices>> except when asking for names/details that need typed input.
-- Skip questions the user already answered.
-- Propose, don't ask open-ended questions. The user reacts to your suggestions.
-- If the user picks a choice, keep moving. Don't repeat what they said back to them.
-- Use plain language. No jargon.
-- Capture names, dates, and tools exactly as given.
-- Pre-seed tasks (3-5 per workstream), milestones, and RAID items in the final output.
+- Use the names, dates, and details the user provided exactly.
+- Generate realistic task durations and dates relative to today's date.
+- Task IDs: T-101, T-102, etc. Milestone IDs: MS-101, etc. RAID IDs: R-001, etc.
+- Workstream IDs: WS-001, WS-002, etc.
+- Set all task statuses to "not_started" and 0% complete.
+- Set all workstream and program statuses to "on_track".
+- If the user left fields empty, use sensible defaults (don't leave required fields blank).
 
-## OUTPUT FORMAT
+## OUTPUT
 
-After confirmation, output the JSON wrapped in \`\`\`json code fences. Do NOT include <<choices>> in the final message with the JSON.`;
+Return ONLY valid JSON matching the ProgramData schema. No markdown, no explanation, just the JSON object.`;
 
 export async function POST(request: NextRequest) {
   try {
-    // Check that the API key is configured
     const apiKey = process.env.ANTHROPIC_API_KEY;
     if (!apiKey || apiKey === "your-anthropic-api-key-here") {
       return NextResponse.json(
@@ -87,30 +47,59 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { messages } = body;
+    const { formData } = body;
 
-    if (!messages || !Array.isArray(messages)) {
+    if (!formData || !formData.projectName) {
       return NextResponse.json(
-        { error: "Messages array is required" },
+        { error: "Form data with projectName is required" },
         { status: 400 }
       );
     }
 
-    // Create the Anthropic client
+    // Build a clear user message from the structured form data
+    const userMessage = `Here is the project intake form data:
+
+**Project Name:** ${formData.projectName}
+**Description:** ${formData.description}
+**Timeline:** ${formData.isOngoing ? "Ongoing program" : `Target end date: ${formData.targetEndDate || "Not set"}`}
+**Today's Date:** ${new Date().toISOString().slice(0, 10)}
+
+**Owner:**
+- Name: ${formData.ownerName}
+- Role: ${formData.ownerRole || "Not specified"}
+- Email: ${formData.ownerEmail || "Not specified"}
+
+**Workstreams:**
+${formData.workstreams
+  .map(
+    (ws: { name: string; leadName: string; description: string }, i: number) =>
+      `${i + 1}. ${ws.name}${ws.leadName ? ` — Led by ${ws.leadName}` : ""}${ws.description ? ` (${ws.description})` : ""}`
+  )
+  .join("\n")}
+
+**Key Stakeholders:**
+${formData.stakeholders || "None specified"}
+
+**Meeting Cadence:**
+${formData.meetingCadence?.length > 0 ? formData.meetingCadence.join(", ") : "None specified"}
+
+**Known Risks:**
+${formData.risks || "None specified"}
+
+**In-Flight Items:**
+${formData.inFlight || "None specified"}
+
+Generate the full ProgramData JSON.`;
+
     const client = new Anthropic({ apiKey });
 
-    // Send the conversation to Claude
     const response = await client.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 4096,
-      system: INTAKE_SYSTEM_PROMPT,
-      messages: messages.map((msg: { role: string; content: string }) => ({
-        role: msg.role as "user" | "assistant",
-        content: msg.content,
-      })),
+      system: GENERATE_PROMPT,
+      messages: [{ role: "user", content: userMessage }],
     });
 
-    // Extract the text content from Claude's response
     const textContent = response.content.find((block) => block.type === "text");
     if (!textContent || textContent.type !== "text") {
       return NextResponse.json(
@@ -119,9 +108,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({ content: textContent.text });
+    // Claude should return raw JSON, but strip code fences if present
+    let jsonText = textContent.text.trim();
+    const fenceMatch = jsonText.match(/```(?:json)?\s*([\s\S]*?)```/);
+    if (fenceMatch) {
+      jsonText = fenceMatch[1].trim();
+    }
+
+    // Validate it's parseable JSON
+    const parsed = JSON.parse(jsonText);
+
+    return NextResponse.json({ projectData: parsed });
   } catch (err) {
-    // Handle specific API errors with friendly messages
+    if (err instanceof SyntaxError) {
+      return NextResponse.json(
+        { error: "Failed to parse generated project plan. Please try again." },
+        { status: 500 }
+      );
+    }
     if (err instanceof Anthropic.AuthenticationError) {
       return NextResponse.json(
         { error: "Invalid API key. Check your ANTHROPIC_API_KEY in .env.local" },
