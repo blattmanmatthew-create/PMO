@@ -21,17 +21,44 @@ function getWorkstreamName(data: ProgramData, wsId: string): string {
 }
 
 export async function generateExcel(data: ProgramData): Promise<Buffer> {
-  // Load the pre-built template
-  const templatePath = path.join(process.cwd(), "lib", "excel", "pmo_template.xlsx");
+  // Load the pre-built template — try multiple paths for compatibility with
+  // different deployment environments (local dev, Vercel serverless, etc.)
   const workbook = new ExcelJS.Workbook();
-  await workbook.xlsx.readFile(templatePath);
+  const candidates = [
+    path.join(process.cwd(), "lib", "excel", "pmo_template.xlsx"),
+    path.join(__dirname, "pmo_template.xlsx"),
+    path.resolve("lib", "excel", "pmo_template.xlsx"),
+  ];
+
+  let loaded = false;
+  for (const candidate of candidates) {
+    try {
+      await workbook.xlsx.readFile(candidate);
+      loaded = true;
+      break;
+    } catch {
+      // try next path
+    }
+  }
+
+  if (!loaded) {
+    // If no template found, create sheets from scratch
+    const sheetNames = [
+      "Program Overview", "Task Plan", "Milestones", "RAID Log",
+      "Stakeholders", "Decision Log", "Meeting Cadence",
+    ];
+    for (const name of sheetNames) {
+      workbook.addWorksheet(name);
+    }
+  }
 
   // ========== Tab 1: Program Overview ==========
   const overview = workbook.getWorksheet("Program Overview");
   if (overview) {
     // Header section (rows 1-8)
     overview.getCell("A1").value = data.program.name;
-    overview.getCell("B3").value = `${data.program.owner.name}, ${data.program.owner.role}`;
+    const owner = data.program.owner || { name: "", role: "" };
+    overview.getCell("B3").value = owner.role ? `${owner.name}, ${owner.role}` : owner.name;
     overview.getCell("E3").value = data.program.status.replace("_", " ").toUpperCase();
     overview.getCell("B4").value = data.program.is_ongoing ? "Ongoing Program" : "Time-bound Project";
     overview.getCell("E4").value = data.program.target_end_date || "Ongoing";
@@ -194,7 +221,7 @@ export async function generateExcel(data: ProgramData): Promise<Buffer> {
         row.getCell(4).value = parseDate(ms.date);
         if (row.getCell(4).value) row.getCell(4).numFmt = "MM/DD/YY";
         row.getCell(5).value = ms.status.replace("_", " ").toUpperCase();
-        row.getCell(6).value = ms.dependencies.join(", ");
+        row.getCell(6).value = (ms.dependencies || []).join(", ");
         row.getCell(7).value = ms.owner;
         row.getCell(8).value = "";
 
@@ -309,7 +336,7 @@ export async function generateExcel(data: ProgramData): Promise<Buffer> {
       row.getCell(5).value = sh.interest_level.toUpperCase();
       row.getCell(6).value = sh.influence_level.toUpperCase();
       // Summarize communications as a readable string
-      row.getCell(7).value = sh.communications
+      row.getCell(7).value = (sh.communications || [])
         .map((c) => `${c.type} (${c.frequency}, ${c.format})`)
         .join("; ");
       row.getCell(7).alignment = { wrapText: true };
@@ -345,7 +372,7 @@ export async function generateExcel(data: ProgramData): Promise<Buffer> {
       if (row.getCell(2).value) row.getCell(2).numFmt = "MM/DD/YY";
       row.getCell(3).value = dec.description;
       row.getCell(3).alignment = { wrapText: true };
-      row.getCell(4).value = dec.options_considered.join("; ");
+      row.getCell(4).value = (dec.options_considered || []).join("; ");
       row.getCell(4).alignment = { wrapText: true };
       row.getCell(5).value = dec.decided_by;
       row.getCell(6).value = dec.rationale;
@@ -377,13 +404,13 @@ export async function generateExcel(data: ProgramData): Promise<Buffer> {
     data.meetings.forEach((mtg, i) => {
       const row = meetingSheet.getRow(i + 2);
       row.getCell(1).value = mtg.name;
-      row.getCell(2).value = mtg.frequency.toUpperCase();
-      row.getCell(3).value = `${mtg.day}, ${mtg.time}`;
-      row.getCell(4).value = mtg.attendees.join(", ");
+      row.getCell(2).value = (mtg.frequency || "").toUpperCase();
+      row.getCell(3).value = `${mtg.day || ""}, ${mtg.time || ""}`.replace(/^, |, $/, "");
+      row.getCell(4).value = (mtg.attendees || []).join(", ");
       row.getCell(4).alignment = { wrapText: true };
-      row.getCell(5).value = mtg.purpose;
+      row.getCell(5).value = mtg.purpose || "";
       row.getCell(5).alignment = { wrapText: true };
-      row.getCell(6).value = mtg.generates.join(", ");
+      row.getCell(6).value = (mtg.generates || []).join(", ");
 
       for (let c = 1; c <= 6; c++) {
         row.getCell(c).font = { name: "Calibri", size: 10 };
